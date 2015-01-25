@@ -114,7 +114,7 @@ app.startLeScan = function()
 		}
 		app.knownDevices[r.address] = r;
 		var res = r.rssi + " " + r.name + " " + r.address;
-		console.log('scan result: ' + res);
+		console.log('scan result: ' + res +"advertisingData: " r.advertisementData);
 		var p = document.getElementById('deviceList');
 		var li = document.createElement('li');
 		var $a = $("<a href=\"#connected\">" + res + "</a>");
@@ -190,7 +190,12 @@ app.getServices = function(deviceHandle)
 		{
 			var s = services[si];
 			console.log('s'+s.handle+': '+s.type+' '+s.uuid+'. '+s.characteristics.length+' chars.');
-
+			//printout Service things
+			console.log("####### Service #########")
+			for(var key in s){
+				console.log('s.' +key +':' +s[key])
+			}
+			console.log("####### EndService #########")
 			var $c = $("#serviceList").
 				addCollapsible({template: $('#servicesListTemplate'),
 					title: 's' + s.handle + ': ' + s.type + ' ' +
@@ -200,6 +205,12 @@ app.getServices = function(deviceHandle)
 			if (s.characteristics.length > 0)
 				$cs = $c.addCollapsibleSet();
 
+			console.log("####### Characteristics #########")
+			for(var key1 in s.characteristics){
+				console.log('s.characteristics.'+key1+': '+s.characteristics[key1])
+				for(var key2 in s.characteristics[key1]){console.log('s.characteristics.'+key1+'.'+key2+': '+s.characteristics[key1][key2])}
+			}
+			console.log("####### End Char #########")
 			for (var ci in s.characteristics)
 			{
 				var c = s.characteristics[ci];
