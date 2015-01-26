@@ -114,7 +114,9 @@ app.startLeScan = function()
 		}
 		app.knownDevices[r.address] = r;
 		var res = r.rssi + " " + r.name + " " + r.address;
-		console.log('scan result: ' + res +"advertisingData: " r.advertisementData);
+		console.log('scan result: ' + res );
+		for(key in ble){console.log("\t"+key +": " +ble[key])}
+
 		var p = document.getElementById('deviceList');
 		var li = document.createElement('li');
 		var $a = $("<a href=\"#connected\">" + res + "</a>");
