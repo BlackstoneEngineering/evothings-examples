@@ -55,6 +55,8 @@
 	{
 		console.log('Device found: ' + device.name + ' rssi: ' + device.rssi)
 		//for(key in device){console.log("\t"+key +": " +device[key])}
+		console.log("Device Advertisement Data: ")
+		evothings.easyble.printObject(device.advertisementData, console.log); //HELP: THIS IS FAILING
 
 		// THIS IS WHERE YOU EDIT THE NAME OF THE BLE DEVICE TO CONNECT TO!
 		var myDeviceName = 'Therm'
@@ -104,26 +106,43 @@
 				console.log('    characteristic: ' + characteristic.uuid)
 				//for(key in characteristic){console.log("\t\t"+key +": " +characteristic[key])}
 				
-				//if(characteristic.uuid == '00002a19-0000-1000-8000-00805f9b34fb')
+				//if(characteristic.uuid == '00002a37-0000-1000-8000-00805f9b34fb')
 				//{
-					var x = device.readCharacteristic(characteristic.uuid,RCwin,RCfail);
+					//var x = device.readCharacteristic(characteristic.uuid,RCwin,RCfail);
 				//}
 				// Print all descriptors for characteristic.
 				for (var descriptorUUID in characteristic.__descriptors)
 				{
 					var descriptor = characteristic.__descriptors[descriptorUUID]
 					console.log('      descriptor: ' + descriptor.uuid)
+					device.readDescriptor('00002a37-0000-1000-8000-00805f9b34fb','00002902-0000-1000-8000-00805f9b34fb',RDwin,RDfail); // HELP this is also failing, am i not using it correctly??
 				}
 			}
 		}
 	}
+	function RDwin(data)
+	{
+		console.log("ReadDescriptor Success!")
+		//console.log('\t\tbyteLength: '+data.byteLength);
+		//var dataArray = new Uint8Array(data);
+		//console.log('\t\tlength: '+dataArray.length);
+		//for( x in data){console.log("/t/tData."+x +": " +data[x])}
+		//var value = dataArray[0];
+		
+		//for(x=0;x<dataArray.length;x++){console.log("\t\t\t"+x+"="+dataArray[x])}
+		//console.log("\tValue = " +value)
+	}
 
+	function RDfail(errorCode)
+	{
+		console.log('readDescriptor error: ' + errorCode);
+	}
 	function RCwin(data)
 	{
 		console.log('\tbyteLength: '+data.byteLength);
 		var dataArray = new Uint8Array(data);
 		console.log('\tlength: '+dataArray.length);
-		for(var key in data){"\t\t"+console.log(key +": " +data[key])}
+		//for( x in data){console.log("/t/tData."+x +": " +data[x])}
 		//var value = dataArray[0];
 		
 		for(x=0;x<dataArray.length;x++){console.log("\t\t"+x+"="+dataArray[x])}
