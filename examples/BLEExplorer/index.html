@@ -117,15 +117,18 @@
 			}
 		}
 	}
-	
+
 	function RCwin(data)
 	{
-		//console.log('byteLength: '+data.byteLength);
+		console.log('\tbyteLength: '+data.byteLength);
 		var dataArray = new Uint8Array(data);
-		//console.log('length: '+dataArray.length);
-		for(key in dataArray){console.log(key +": " +dataArray[key])}
+		console.log('\tlength: '+dataArray.length);
+		for(var key in data){"\t\t"+console.log(key +": " +data[key])}
 		//var value = dataArray[0];
+		
+		for(x=0;x<dataArray.length;x++){console.log("\t\t"+x+"="+dataArray[x])}
 		//console.log("\tValue = " +value)
+		return dataArray
 	}
 
 	function RCfail(errorCode)
