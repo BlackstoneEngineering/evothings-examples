@@ -58,14 +58,6 @@ app.startScan = function()
 			// catch a specific beacon.
 			if(device.address == "CB:6C:D4:E3:4C:96" ){
 				console.log(evothings.util.toHexRawData(device.advertisementData.kCBAdvDataManufacturerData))
-				//ba = evothings.util.base64DecToArr(device.advertisementData.kCBAdvDataManufacturerData)
-				//var srs = ''
-				//for(var i=0; i<ba.length; i++) {
-				//	srs += evothings.util.toHexString(ba[i], 1);
-				//}
-				//console.log("scanRecord: "+srs);
-				//
-				//console.log(JSON.stringify(device.advertisementData));
 			}
 
 			// DOTHIS: Change this to match the name of your device
