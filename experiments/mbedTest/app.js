@@ -6,21 +6,18 @@ var easyble = evothings.easyble;
 // Object that holds application data and functions.
 var app = {};
 
-// Timeout (ms) after which a message is shown if the SensorTag wasn't found.
-app.CONNECT_TIMEOUT = 3000;
-
 // Initialise the application.
 app.initialize = function()
 {
 	document.addEventListener(
 		'deviceready',
-		function() { evothings.scriptsLoaded(app.onDeviceReady) },
+		function() { evothings.scriptsLoaded(app.onDeviceReady()) },
 		false);
 };
 
 app.onDeviceReady = function()
 {
-	app.showInfo('Activate the SensorTag and tap Start.');
+	app.showInfo('Device Ready!');
 };
 
 app.showInfo = function(info)
@@ -38,6 +35,7 @@ app.onStartButton = function()
 
 app.onStopButton = function()
 {
+	console.log("muahahah!")
 	// Stop any ongoing scan and close devices.
 	easyble.stopScan();
 	easyble.closeConnectedDevices();
