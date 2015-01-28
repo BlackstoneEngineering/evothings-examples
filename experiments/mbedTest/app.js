@@ -49,6 +49,7 @@ app.startScan = function()
 	easyble.startScan(
 		function(device)
 		{
+			easyble.reportDeviceOnce = true;
 			// DOTHIS: Change this to match the name of your device
 			if (device.name == "ChangeMe!")
 			{
@@ -87,7 +88,7 @@ app.readServices = function(device)
 {
 	//read all services
 	device.readServices(
-		0,
+		null,
 		// Function that prints out service data.
 		// TODO: make sure this works....
 		function(winCode)
