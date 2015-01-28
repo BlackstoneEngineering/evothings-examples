@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--
+	Description:
+
+	BLE example application that serves as a testbed for mbed devices
+
+	Requirements:
+
+	See text in the app user interface.
+-->
+<html>
+
+<head>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, user-scalable=no
+		initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+
+	<title>mbedTest</title>
+
+	<style>
+		@import 'ui/css/evothings-app.css';
+	</style>
+
+	<script>
+	// Redirect console.log to Evothings Workbench.
+	if (window.hyper && window.hyper.log) { console.log = hyper.log }
+	</script>
+
+	<script src="cordova.js"></script>
+	<script src="libs/jquery/jquery.js"></script>
+	<script src="libs/evothings/evothings.js"></script>
+	<script src="libs/evothings/easyble/easyble.js"></script>
+	<script src="app.js"></script>
+
+</head>
+
+<body ontouchstart=""><!-- ontouchstart="" enables low-delay CSS transitions. -->
+
+	<header>
+		<button class="back" onclick="history.back()">
+			<img src="ui/images/arrow-left.svg" />
+		</button>
+
+		<img class="logotype" src="ui/images/logo.svg" alt="Evothings" />
+
+		<!--<button class="menu" onclick=""><img src="ui/images/menu.svg" /></button>-->
+	</header>
+
+	<h1>TI SensorTag Demo</h1>
+
+	<p id="info">Not Connected</p>
+
+	<button onclick="app.onStartButton()" class="green">START</button>
+	<button onclick="app.onStopButton()" class="red">STOP</button>
+	<button onclick="app.getAdvertisingData()">Advertising Data</button>
+	<button onclick="app.Scan()">Scan</button>
+
+	<canvas id="canvas" width="300" height="150"></canvas>
+
+	<h2>Info</h2>
+
+	<p>This app serves as a base example application for developing on evothings with mbed.</p>
+
+	<h2>How to use</h2>
+
+	<p>To be determined</p>
+
+	<div id="scratch">
+		
+
+	</div>
+</body>
+
+</html>
