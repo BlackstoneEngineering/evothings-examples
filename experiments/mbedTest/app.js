@@ -28,14 +28,16 @@ app.showInfo = function(info)
 
 app.onStartButton = function()
 {
+	// call stop before you start, just in case something else is running
 	app.onStopButton();
+	// only report devices once
+	easyble.reportDeviceOnce(true);
 	app.startScan();
 	app.showInfo('Status: Scanning...');
 };
 
 app.onStopButton = function()
 {
-	console.log("muahahah!")
 	// Stop any ongoing scan and close devices.
 	easyble.stopScan();
 	easyble.closeConnectedDevices();
@@ -47,7 +49,25 @@ app.startScan = function()
 	easyble.startScan(
 		function(device)
 		{
-			easyble.reportDeviceOnce = true;
+			// print out debug information
+			//for(key in device){console.log("\tdevice."+key+":" +device[key])}
+			console.log("\n\r\tname:"+device.name+"  address:"+device.address +" rssi:"+device.rssi +"\n\t ScanRecord:"+device.scanRecord)
+			for(key in device.advertisementData){
+				console.log("\t"+device.name+".advertisementData."+key+"="+device.advertisementData[key])}
+			
+			// catch a specific beacon.
+			if(device.address == "CB:6C:D4:E3:4C:96" ){
+				console.log(evothings.util.toHexRawData(device.advertisementData.kCBAdvDataManufacturerData))
+				//ba = evothings.util.base64DecToArr(device.advertisementData.kCBAdvDataManufacturerData)
+				//var srs = ''
+				//for(var i=0; i<ba.length; i++) {
+				//	srs += evothings.util.toHexString(ba[i], 1);
+				//}
+				//console.log("scanRecord: "+srs);
+				//
+				//console.log(JSON.stringify(device.advertisementData));
+			}
+
 			// DOTHIS: Change this to match the name of your device
 			if (device.name == "ChangeMe!")
 			{
