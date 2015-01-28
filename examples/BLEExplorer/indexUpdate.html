@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<!--
+	BLE Tutorial example.
+
+	The purpose of this program is to show how to scan for
+	devices and list the services, characteristics, and
+	descriptors of the found device.
+
+	Output from the program is shown in the Evothings Workbench
+	console log window, found in the "Tools" window. Open the
+	Tools window, then run this app and study the output.
+
+	You can tweak the code below and do your own experiements.
+
+	Specifically, you have to enter the name of the BLE device
+	you wish to connect to.
+-->
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>BLE Explorer</title>
+	<link rel="stylesheet" href="common.css" />
+	<style>
+	body {
+		background: rgb(255,255,255);
+	}
+	</style>
+	<script>
+	// Redirect console.log to Evothings Workbench.
+	if (window.hyper) { console.log = hyper.log; }
+	</script>
+	<script src="cordova.js"></script>
+	<script src="libs/jquery/jquery.js"></script>
+	<script src="libs/evothings/evothings.js"></script>
+	<script src="libs/evothings/easyble/easyble.js"></script>
+</head>
+<body>
+	<h1>BLE Explorer</h1>
+
+	<p>Result of scanning for devices and device data is found in the Evothings Workbench debug log window, found under the "Tools" menu.</p>
+
+	<p>First open the "Tools" window, then restart this app to console output.</p>
+
+	<p>Use this example by experimenting with the JavaScript source code. Note that you will need to edit the name of the BLE device you wish to connect to in the code.</p>
+
+	<script>
+	function init()
+	{
+		console.log('Scanning for devices...')
+		evothings.easyble.reportDeviceOnce = true
+		evothings.easyble.startScan(deviceDetected, scanError)
+	}
+
+	function deviceDetected(device)
+	{
+		console.log('Device found: ' + device.name + ' rssi: ' + device.rssi)
+		//for(key in device){console.log("\t"+key +": " +device[key])}
+		console.log("Device Advertisement Data: ")
+		evothings.easyble.printObject(device.advertisementData, console.log); //HELP: THIS IS FAILING
+
+		// THIS IS WHERE YOU EDIT THE NAME OF THE BLE DEVICE TO CONNECT TO!
+		var myDeviceName = 'Therm'
+
+		// Connect if name matches.
+		if (device.name == myDeviceName)
+		{
+			evothings.easyble.stopScan()
+			console.log('Connecting')
+			//for(key in device){console.log("\t\t"+key +": " +device[key])}
+			device.connect(deviceConnected, connectError)
+		}
+	}
+
+	function deviceConnected(device)
+	{
+		console.log('Connected to device: ' + device.name)
+		console.log('Reading services... Have patience!')
+		device.readServices(
+			null, // null means "read all services".
+			readAllServicesCharacteristicsAndNotifications,
+			readServicesError)
+	}
+
+	// Function that gets called when reading device.readServices()
+	// has successfully completed.
+	function readAllServicesCharacteristicsAndNotifications(device)
+	{
+		// Here we simply print found services, characteristics,
+		// and descriptors to the debug console in Evothings Workbench.
+
+		// Notice that the fields prefixed with "__" are arrays that
+		// contain services, characteristics and notifications found
+		// in the call to device.readServices().
+
+		// Print all services.
+		for (var serviceUUID in device.__services)
+		{
+			var service = device.__services[serviceUUID]
+			console.log('  service: ' + service.uuid)
+			//for(key in device){console.log("\t"+key +": " +device[key])}
+
+			// Print all characteristics for service.
+			for (var characteristicUUID in service.__characteristics)
+			{
+				var characteristic = service.__characteristics[characteristicUUID]
+				console.log('    characteristic: ' + characteristic.uuid)
+				//for(key in characteristic){console.log("\t\t"+key +": " +characteristic[key])}
+				
+				//if(characteristic.uuid == '00002a37-0000-1000-8000-00805f9b34fb')
+				//{
+					//var x = device.readCharacteristic(characteristic.uuid,RCwin,RCfail);
+				//}
+				// Print all descriptors for characteristic.
+				for (var descriptorUUID in characteristic.__descriptors)
+				{
+					var descriptor = characteristic.__descriptors[descriptorUUID]
+					console.log('      descriptor: ' + descriptor.uuid)
+					device.readDescriptor('00002a37-0000-1000-8000-00805f9b34fb','00002902-0000-1000-8000-00805f9b34fb',RDwin,RDfail); // HELP this is also failing, am i not using it correctly??
+				}
+			}
+		}
+	}
+	function RDwin(data)
+	{
+		console.log("ReadDescriptor Success!")
+		//console.log('\t\tbyteLength: '+data.byteLength);
+		//var dataArray = new Uint8Array(data);
+		//console.log('\t\tlength: '+dataArray.length);
+		//for( x in data){console.log("/t/tData."+x +": " +data[x])}
+		//var value = dataArray[0];
+		
+		//for(x=0;x<dataArray.length;x++){console.log("\t\t\t"+x+"="+dataArray[x])}
+		//console.log("\tValue = " +value)
+	}
+
+	function RDfail(errorCode)
+	{
+		console.log('readDescriptor error: ' + errorCode);
+	}
+	function RCwin(data)
+	{
+		console.log('\tbyteLength: '+data.byteLength);
+		var dataArray = new Uint8Array(data);
+		console.log('\tlength: '+dataArray.length);
+		//for( x in data){console.log("/t/tData."+x +": " +data[x])}
+		//var value = dataArray[0];
+		
+		for(x=0;x<dataArray.length;x++){console.log("\t\t"+x+"="+dataArray[x])}
+		//console.log("\tValue = " +value)
+		return dataArray
+	}
+
+	function RCfail(errorCode)
+	{
+		console.log('readCharacteristic error: ' + errorCode);
+	}
+	function scanError(errorCode)
+	{
+		console.log('Scan failed:  + errorCode')
+	}
+
+	function connectError(errorCode)
+	{
+		console.log('Connect failed:  + errorCode')
+	}
+
+	function readServicesError(errorCode)
+	{
+		console.log('Read services failed:  + errorCode')
+	}
+
+	// Run init function when the mobile device is ready.
+	document.addEventListener('deviceready', init, false)
+	</script>
+</body>
+</html>
