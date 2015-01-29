@@ -48,14 +48,15 @@
 
 	<h1>mbed beacon scan</h1>
 
-	<p id="info">No beacons found</p>
-
 	<h2>Info</h2>
 
-	<p>This application scans all available devices nearby and checks the ManufacturerData field for beacon compatible data.
-	<img src="./ibeaconPayload.png" alt="iBeacon Packet Layout" />
+	<p>This application scans all BLE devices nearby and checks their advertising data for beacon compatible data. The Beacon Data layout can be seen below.
+	
+	<img style="max-width:100%" src="./ibeaconPayload.png" alt="iBeacon Packet Layout" />
 	</p>
-	<ul id="found-beacons" class="dynamic"></ul>
+
+	<p id="info">No beacons found</p>
+	<ul id="found-beacons" class="dynamic" style="max-width:100%"></ul>
 
 </body>
 
