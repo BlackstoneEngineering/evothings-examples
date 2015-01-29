@@ -89,8 +89,8 @@ app.displayBeaconList = function()
 		txPower =RawData.slice(58,60)
 		
 		var element = $(
-			'<li>'
-			+		'Address: '+device.address  +'<br />'
+			'<li style="font-size: 50%">'
+			+		'<strong>Address: '+device.address  +'</strong><br />'
 			+		'RSSI: '+device.rssi 		+'<br />'
 			+		'Raw Data: 0x' +RawData 	+'<br />'
 			+		'Prefix:   0x' +prefix 		+'<br />'
@@ -102,6 +102,13 @@ app.displayBeaconList = function()
 			);
 		$('#found-beacons').append(element);
 	}
+}
+
+// remove all found beacons and clear displayed beacons
+app.reset = function()
+{
+	beacons = {};
+	$('#found-beacons').empty();
 }
 
 // Initialize the app.
