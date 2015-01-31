@@ -84,8 +84,8 @@ app.displayBeaconList = function()
 		// remember, each byte takes up 2 cahracters, so the numbers are *2
 		prefix 	=RawData.slice(0,18)	// 9byte*2 = 18
 		proxUUID=RawData.slice(18,50)	// 16byte*2 = 32
-		minor  	=RawData.slice(50,54)	
-		major 	=RawData.slice(54,58)
+		major  	=RawData.slice(50,54)	
+		minor 	=RawData.slice(54,58)
 		txPower =RawData.slice(58,60)
 		
 		var element = $(
