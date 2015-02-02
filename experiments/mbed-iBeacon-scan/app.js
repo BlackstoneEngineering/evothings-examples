@@ -91,13 +91,13 @@ app.displayBeaconList = function()
 		var element = $(
 			'<li style="font-size: 50%">'
 			+		'<strong>Address: '+device.address  +'</strong><br />'
-			+		'RSSI: '+device.rssi 		+'<br />'
+			+		'RSSI: '+device.rssi+"dB"	+'<br />'
 			+		'Raw Data: 0x' +RawData 	+'<br />'
 			+		'Prefix:   0x' +prefix 		+'<br />'
 			+		'ProxUUID: 0x'+proxUUID 	+'<br />'
 			+		'Major:   0x'+major  +' ('+parseInt(major,16)  +')' +'<br />'
 			+		'Minor:   0x'+minor  +' ('+parseInt(minor,16)  +')'	+'<br />'
-			+		'TxPower: 0x'+txPower+' ('+parseInt(txPower,16)+')' +'<br />'
+			+		'TxPower: 0x'+txPower+' ('+(256-parseInt(txPower,16))+"dB"+')' +'<br />'
 			+'	<li>'
 			);
 		$('#found-beacons').append(element);
