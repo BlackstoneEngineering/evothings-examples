@@ -84,7 +84,6 @@ evothings.util = (function()
 	// back to the raw hex values. Useful for microcontrollers and low level
 	// pairings on things like iBeacon
 	funs.toHexRawData = function(string){
-		if(string == undefined){return string}
 		byteArray = evothings.util.base64DecToArr(string)
 		var srs = ''
 		for(var i=0; i<byteArray.length; i++) {
