@@ -49,29 +49,19 @@ app.startScan = function()
 		function(device)
 		{
 			var name = "";
-			// do not show un-named beacons
-			//if(!device.name){return 0}
-			if(device.name){
-				console.log(device.name +"\t: "+device.address)
-				name = 'Name : '+device.name +"<br />";
-			}
 			//if(device.address != "CB:6C:D4:E3:4C:96"){return 0}
-			if(!device.name){return 0}
+			// do not show un-named beacons
+			if(!device.name){return 0;}
+			console.log(device.name.toString() +" : "+device.address.toString().split(":").join(''))
 
-			// print out debug information
-			//console.log("Device Found!")
-			//console.log("\n\r\tname:"+device.name+"  address:"+device.address +" rssi:"+device.rssi )
-			//for(key in device){console.log(key+" : "+device[key])}
-			//for(key in device.advertisementData){
-			//	console.log("\t"+device.name+".advertisementData."+key+"="+device.advertisementData[key])}
-			//console.log(evothings.util.toHexRawData(device.scanRecord))
 			// add device to list of devices
-			deviceList[device.address]=device;
+			//deviceList[device.address.split(":").join("")]=device;
+			
 			// display found device
 			//console.log("test="+String(device.address).replace(':',''))
 			var element = $(
 			//'<li style="font-size: 50%"" onclick="app.connectToDevice('+device.name+')">'
-			'<li style="font-size: 50%">'
+			'<li style="font-size: 50%" onclick="app.connectToDevice()">'
 			+		'<strong>Address: '+device.address  +'</strong><br />'
 			+name
 			+		'RSSI: '+device.rssi+"dB"	+'<br />'
@@ -82,7 +72,7 @@ app.startScan = function()
 			$('#found-devices').append(element);
 
 			// DOTHIS: Change this to match the name of your device
-			if (device.name == "Therm")
+			if (device.name == "Spiffy2")
 			{
 				app.showInfo('Status: Device found: ' + device.name + '.');
 				easyble.stopScan();
@@ -100,7 +90,7 @@ app.startScan = function()
 app.connectToDevice = function(device)
 {
 	console.log("Starting ConnectToDevice")
-	app.showInfo('Connecting...');
+	app.showInfo('Connecting to '+device.name +"...");
 	device.connect(
 		function(device)
 		{
@@ -125,16 +115,46 @@ app.readServices = function(device)
 		// TODO: make sure this works....
 		function(winCode)
 		{
+			// print Top level of device tree to console
 			console.log("\n\r*******\n\rReadServices Sucess\n\r****** "+winCode);
 			for(key in winCode){console.log(key+" : " +winCode[key])}
+			
+			// Print __uuidmap tree to Console
 			console.log("\n\r********\n\r__uuidMap\n\r***********")
-			for(key in winCode.__uuidMap){console.log(key+": "+winCode.__uuidMap[key])}
+			for(key in winCode.__uuidMap){
+				console.log(key+": "+winCode.__uuidMap[key])
+				for(key2 in winCode.__uuidMap[key]){
+					console.log("\t"+key2+": "+winCode.__uuidMap[key][key2])
+				}
+
+			}
+
+			
+			// Print __services Tree to Console
 			console.log("\n\r********\n\__services\n\r***********")
 			for(key in winCode.__services){
 				console.log(key+": "+winCode.__services[key])
 				for(key2 in winCode.__services[key]){
 					console.log("\t"+key2+": "+winCode.__services[key][key2])
+					if(key2 == "__characteristics"){
+						for(key3 in winCode.__services[key][key2] ){
+							console.log("\t\t"+key3+": "+winCode.__services[key][key2][key3])
+							for(key4 in winCode.__services[key][key2][key3] ){
+								console.log("\t\t\t"+key4+": "+winCode.__services[key][key2][key3][key4])
+								if(key4 == "__descriptors"){
+									for(key5 in winCode.__services[key][key2][key3][key4]){
+										console.log("\t\t\t\t"+key5+": "+winCode.__services[key][key2][key3][key4][key5])
+										for(key6 in winCode.__services[key][key2][key3][key4][key5]){
+											console.log("\t\t\t\t\t"+key6+": "+winCode.__services[key][key2][key3][key4][key5][key6])
+										}
+									}
+
+								}
+							}		
+						}
+					}
 				}
+				
 			}
 		},
 		// Use this function to monitor magnetometer data
