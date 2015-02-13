@@ -11,13 +11,16 @@
  * underscores.
  */
 
-evothings.loadScript('libs/evothings/util/util.js');
+// We assume the "evothings" library was loaded first.
 
-var base64 = cordova.require('cordova/base64');
+// Load dependent script.
+evothings.loadScript('libs/evothings/util/util.js');
 
 // Object that holds BLE data and functions.
 evothings.easyble = (function()
 {
+	var base64 = cordova.require('cordova/base64');
+
 	/** Main object in the EasyBLE API. */
 	var easyble = {};
 
@@ -277,11 +280,8 @@ evothings.easyble = (function()
 
 		/*
 		// Log raw data for debugging purposes.
-		var srs = ''
-		for(var i=0; i<byteArray.length; i++) {
-			srs += evothings.util.toHexString(byteArray[i], 1);
-		}
-		console.log("scanRecord: "+srs);
+
+		console.log("scanRecord: "+evothings.util.typedArrayToHexString(byteArray));
 
 		console.log(JSON.stringify(advertisementData));
 		*/
@@ -691,32 +691,8 @@ evothings.easyble = (function()
 			fail);
 	};
 
-	// For debugging. Example call:
-	// easyble.printObject(device, console.log);
-	easyble.printObject = function(obj, printFun)
-	{
-		function print(obj, level)
-		{
-			var indent = new Array(level + 1).join('  ');
-			for (var prop in obj)
-			{
-				if (obj.hasOwnProperty(prop))
-				{
-					var value = obj[prop];
-					if (typeof value == 'object')
-					{
-						printFun(indent + prop + ':');
-						print(value, level + 1);
-					}
-					else
-					{
-						printFun(indent + prop + ': ' + value);
-					}
-				}
-			}
-		}
-		print(obj, 0);
-	};
+	// Deprecated. Defined here for backwards compatibility.
+	easyble.printObject = evothings.printObject;
 
 	easyble.reset = function()
 	{

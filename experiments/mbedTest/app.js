@@ -57,7 +57,7 @@ app.startScan = function()
 			
 			// catch a specific beacon.
 			if(device.address == "CB:6C:D4:E3:4C:96" ){
-				console.log(evothings.util.toHexRawData(device.advertisementData.kCBAdvDataManufacturerData))
+				console.log(app.getHexData(device.advertisementData.kCBAdvDataManufacturerData))
 			}
 
 			// DOTHIS: Change this to match the name of your device
@@ -115,6 +115,14 @@ app.readServices = function(device)
 			console.log('Error: Failed to read services: ' + errorCode + '.');
 		});
 };
+
+// convert base64 to array to hex.
+app.getHexData = function(data)
+{
+	if(data){ // sanity check
+		return evothings.util.typedArrayToHexString(evothings.util.base64DecToArr(data))	
+	}
+}
 
 // Initialize the app.
 app.initialize();

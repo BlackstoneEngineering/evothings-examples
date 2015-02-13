@@ -47,15 +47,14 @@ app.showInfo = function(info)
 app.startScan = function()
 {
 	easyble.startScan(
-		function(device)
-		{
+		function(device)		{
 			// Check for beacon Prefix = ibeacon prefix
 			// YOU CAN MODIFY THIS TO FIND THINGS OTHER THAN iBEACONS!!
-			if (evothings.util.toHexRawData(device.scanRecord).slice(0,18) == '0201061aff4c000215' )
+			if (app.getHexData(device.scanRecord).slice(0,18) == '0201061aff4c000215' )
 			{
 				if(beacons[device.address] == undefined){
 					app.showInfo("Beacons Found!")
-					console.log(evothings.util.toHexRawData(device.scanRecord))
+					console.log(app.getHexData(device.scanRecord))
 				}
 				// add device to list of possible beacons
 				beacons[device.address]=device;
@@ -79,7 +78,7 @@ app.displayBeaconList = function()
 		// get device out of list
 		device = beacons[thing]
 		// get raw advertising data from ManufacturerData field
-		RawData = evothings.util.toHexRawData(device.scanRecord).slice(0,62)
+		RawData = app.getHexData(device.scanRecord).slice(0,62)
 		// extract data fields from Raw Data 
 		// remember, each byte takes up 2 cahracters, so the numbers are *2
 		prefix 	=RawData.slice(0,18)	// 9byte*2 = 18
@@ -109,6 +108,14 @@ app.reset = function()
 {
 	beacons = {};
 	$('#found-beacons').empty();
+}
+
+// convert base64 to array to hex.
+app.getHexData = function(data)
+{
+	if(data){ // sanity check
+		return evothings.util.typedArrayToHexString(evothings.util.base64DecToArr(data))	
+	}
 }
 
 // Initialize the app.

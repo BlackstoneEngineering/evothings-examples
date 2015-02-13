@@ -79,20 +79,6 @@ evothings.util = (function()
 		return taBytes;
 	}
 
-	// Converts from base64 Ascii encoded string to hex encoded string
-	// useful to convert advertisementData.kCBAdvDataManufacturerData
-	// back to the raw hex values. Useful for microcontrollers and low level
-	// pairings on things like iBeacon
-	funs.toHexRawData = function(string){
-		byteArray = evothings.util.base64DecToArr(string)
-		var srs = ''
-		for(var i=0; i<byteArray.length; i++) {
-			srs += evothings.util.toHexString(byteArray[i], 1);
-		}
-		//console.log("scanRecord: "+srs);
-		return srs;
-	}
-
 	// Returns the integer i in hexadecimal string form,
 	// with leading zeroes, such that
 	// the resulting string is at least byteCount*2 characters long.
@@ -102,6 +88,25 @@ evothings.util = (function()
 			string = '0'+string;
 		}
 		return string;
+	}
+
+	// Takes a ArrayBuffer or TypedArray and returns its hexadecimal representation.
+	// No spaces or linebreaks.
+	funs.typedArrayToHexString = function(data) {
+		// view data as a Uint8Array, unless it already is one.
+		if(data.buffer) {
+			if(!(data instanceof Uint8Array))
+				data = new Uint8Array(data.buffer);
+		} else if(data instanceof ArrayBuffer) {
+			data = new Uint8Array(data);
+		} else {
+			throw "not an ArrayBuffer or TypedArray.";
+		}
+		var str = '';
+		for(var i=0; i<data.length; i++) {
+			str += evothings.util.toHexString(data[i], 1);
+		}
+		return str;
 	}
 
 	// Return object that holds functions.

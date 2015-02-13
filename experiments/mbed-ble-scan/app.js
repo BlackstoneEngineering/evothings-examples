@@ -155,5 +155,13 @@ app.readServices = function(device)
 		});
 };
 
+// convert base64 to array to hex.
+app.getHexData = function(data)
+{
+	if(data){ // sanity check
+		return evothings.util.typedArrayToHexString(evothings.util.base64DecToArr(data))	
+	}
+}
+
 // Initialize the app.
 app.initialize();
