@@ -15,57 +15,51 @@ app.initialize = function()
 		false);
 };
 
+// Initial callback from Evothings Library.
 app.onDeviceReady = function()
 {
 	app.showInfo('Device Ready!');
+		// only report devices once
+	easyble.reportDeviceOnce(true); // constant stream of data vs single report
+	app.startScan();
+	app.showInfo('Status: Scanning...');
+
 };
 
+// print debug info to console and app screen
 app.showInfo = function(info)
 {
 	document.getElementById('info').innerHTML = info;
 	console.log(info);
 };
 
-app.onStartButton = function()
-{
-	// call stop before you start, just in case something else is running
-	app.onStopButton();
-	// only report devices once
-	easyble.reportDeviceOnce(true);
-	app.startScan();
-	app.showInfo('Status: Scanning...');
-};
-
-app.onStopButton = function()
-{
-	// Stop any ongoing scan and close devices.
-	easyble.stopScan();
-	easyble.closeConnectedDevices();
-	app.showInfo('Status: Stopped.');
-};
-
+// Start scanning and handle devices
 app.startScan = function()
 {
 	easyble.startScan(
 		function(device)
 		{
-			// print out debug information
-			//for(key in device){console.log("\tdevice."+key+":" +device[key])}
-			console.log("\n\r\tname:"+device.name+"  address:"+device.address +" rssi:"+device.rssi +"\n\t ScanRecord:"+device.scanRecord)
+			if(device.name){return;} // only process un-named devices, aka beacons 
 			for(key in device.advertisementData){
 				console.log("\t"+device.name+".advertisementData."+key+"="+device.advertisementData[key])}
 			
-			// catch a specific beacon.
-			if(device.address == "CB:6C:D4:E3:4C:96" ){
-				console.log(app.getHexData(device.advertisementData.kCBAdvDataManufacturerData))
-			}
+			// add found device to device list
+			var element = $(
+			'<li style="font-size: 50%" onclick="app.connectToDevice()">'
+			+		'<strong>Address: '+device.address  +'</strong><br />'
+			+		'RSSI: '+device.rssi+"dB"	+'<br />'
+			+		'AdvertisementData: '+app.getHexData(device.advertisementData) +'<br />'
+			+		'ManufacturerData: '+app.getHexData(device.advertisementDatakCBAdvDataManufacturerData) +'<br />'
+			+'	<li>'
+			);
+			$('#found-devices').append(element);
 
 			// DOTHIS: Change this to match the name of your device
-			if (device.name == "ChangeMe!")
+			if (device.address == "ChangeMeToYourDevicesAddress")
 			{
-				app.showInfo('Status: Device found: ' + device.name + '.');
+				app.showInfo('Found your device!');
 				easyble.stopScan();
-				app.connectToDevice(device);
+				app.doSomething(device);
 			}
 		},
 		function(errorCode)
@@ -75,48 +69,15 @@ app.startScan = function()
 		});
 };
 
-// Read services for a device.
-app.connectToDevice = function(device)
+// Fill this out with a decoder for your code
+app.doSomething = function(device)
 {
-	app.showInfo('Connecting...');
-	device.connect(
-		function(device)
-		{
-			app.showInfo('Status: Connected - reading services...');
-			app.readServices(device);
-		},
-		function(errorCode)
-		{
-			app.showInfo('Error: Connection failed: ' + errorCode + '.');
-			evothings.ble.reset();
-			// This can cause an infinite loop...
-			//app.connectToDevice(device);
-		});
-};
+	// process the device here, break up its data into chunks and print it out.
 
-app.readServices = function(device)
-{
-	//read all services
-	device.readServices(
-		null,
-		// Function that prints out service data.
-		// TODO: make sure this works....
-		function(winCode)
-		{
-			for(key in wincode){
-				console.log("\tReadService.wincode."+key+wincode[key]);
-			}
-		},
-		// Use this function to monitor magnetometer data
-		// (comment out the above line if you try this).
-		//app.startMagnetometerNotification,
-		function(errorCode)
-		{
-			console.log('Error: Failed to read services: ' + errorCode + '.');
-		});
-};
 
-// convert base64 to array to hex.
+}
+
+// convert base64 to array to hex.Used to show Advertising Packet Data
 app.getHexData = function(data)
 {
 	if(data){ // sanity check
