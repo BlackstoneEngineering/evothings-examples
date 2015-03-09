@@ -3,6 +3,9 @@
 // Short name for EasyBLE library.
 var easyble = evothings.easyble;
 
+// Name of device to connect to
+var DeviceName = "ChangeMe!!"
+
 // Object that holds application data and functions.
 var app = {};
 
@@ -59,12 +62,12 @@ app.startScan = function()
 			+		'RSSI: '+device.rssi+"dB"	+'<br />'
 			+		'Name: '+device.name 		+'<br />'
 			+		'ServiceUUID: '+device.advertisementData.kCBAdvDataServiceUUIDs +'<br />'
-			+'	<li>'
+			+'	</li>'
 			);
 			$('#found-devices').append(element);
 
 			// Change this to match the name of your device
-			if (device.name == "ChangeMe!!")
+			if (device.name == DeviceName)
 			{
 				app.showInfo('Status: Device found: ' + device.name + '.');
 				easyble.stopScan();
@@ -86,7 +89,8 @@ app.connectToDevice = function(device)
 	device.connect(
 		function(device)
 		{
-			app.showInfo('Status: Connected - reading services...');
+			app.showInfo('Status: Connected - reading services... '
+							 +'See Tools window for verbose output');
 			app.readServices(device);
 		},
 		function(errorCode)
@@ -140,13 +144,11 @@ app.readServices = function(device)
 											console.log("\t\t\t\t\t"+key6+": "+winCode.__services[key][key2][key3][key4][key5][key6])
 										}
 									}
-
 								}
 							}		
 						}
 					}
 				}
-				
 			}
 		},
 		function(errorCode)
