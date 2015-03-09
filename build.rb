@@ -110,8 +110,14 @@ def buildIBeaconScan
 	copyJQuery(destPath)
 end
 
-def buildEstimoteScan
-	destPath = 'examples/estimote-scan'
+def buildEstimoteBeacons
+	destPath = 'examples/estimote-beacons'
+	copyCommon(destPath)
+	copyJQuery(destPath)
+end
+
+def buildEstimoteNearables
+	destPath = 'examples/estimote-nearables'
 	copyCommon(destPath)
 	copyJQuery(destPath)
 end
@@ -162,6 +168,12 @@ def buildLightblueBeanSerial
 	destPath = 'experiments/lightblue-bean-serial'
 	copyCommon(destPath)
 	copyUtil(destPath)
+end
+
+def buildMediaTekLinkIt
+	destPath = 'examples/mediatek-linkit/app'
+	copyUI(destPath)
+	copyJQuery(destPath)
 end
 
 ###### Copy helpers ######
@@ -256,7 +268,8 @@ def build
 	buildBLEScan
 	buildBlunoHelloWorld
 	buildCordovaBasic
-	buildEstimoteScan
+	buildEstimoteBeacons
+	buildEstimoteNearables
 	buildHelloWorld
 	buildHueLights
 	buildIBeaconScan
@@ -268,6 +281,7 @@ def build
 	buildRFduinoLEDOnOff
 	buildTISensorTagDemo
 	buildTISensorTagSensors
+	buildMediaTekLinkIt
 end
 
 build
