@@ -42,7 +42,7 @@
 			<img src="ui/images/arrow-left.svg" />
 		</button>
 
-		<img class="logotype" src="ui/images/logo.svg" alt="Evothings" />
+		<img class="logotype" src="ui/images/logo.svg" alt="Evothings" />	
 
 		<!--<button class="menu" onclick=""><img src="ui/images/menu.svg" /></button>-->
 	</header>
@@ -52,13 +52,15 @@
 	<p id="info">Not Connected</p>
 
 	<button class='grey' id='toggle' onclick="app.toggle()">toggle</button>
+	<button class="red" onclick="app.onDeviceReady()" style="float:right">
+		Reset
+	</button>	
 	<h2>Info</h2>
 
-	<p>This app is paired with the mbed code LINKTOCODE. The mbed code demonstrates
+	<p>This app is paired with the <a href="http://developer.mbed.org/users/mbedAustin/code/BLE_EvothingsExample_GATT/">	custom GATT mbed code</a> . The mbed code demonstrates
 		how to create a custom GATT service on the microcontroller side, 
 		this application demonstrates how to interact with that custom GATT 
 		service from the phone side.</p>
-
 
 </body>
 

@@ -97,7 +97,8 @@ app.connectToDevice = function(device)
 		{
 			GDevice = device;
 			app.showInfo('Status: Connected');
-			app.readServices(GDevice)
+			app.readServices(GDevice);
+			app.toggle();
 		},
 		function(errorCode)
 		{
@@ -117,7 +118,6 @@ app.readServices = function(device)
 	device.readServices(
 		null,
 		// Function that prints out service data.
-		// TODO: make sure this works....
 		function(winCode)
 		{
 			console.log("ReadServices Sucess");
@@ -162,8 +162,8 @@ app.toggle = function()
 			GDevice.writeCharacteristic(
 				'0000a002-0000-1000-8000-00805f9b34fb',
 				led,
-				function(win){console.log("WriteChar success:"+win)},
-				function(fail){console.log("WriteChar fail:"+fail)})
+				function(win){console.log("led toggled successfully!")},
+				function(fail){console.log("led toggle failed: "+fail)})
 			
 		},
 		function(fail){
