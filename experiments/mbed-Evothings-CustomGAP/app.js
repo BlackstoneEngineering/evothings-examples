@@ -1,10 +1,16 @@
-// JavaScript code for the mbed to Evothings custom GAP app
+// JavaScript code for the mbed ble scan app
 
 // Short name for EasyBLE library.
 var easyble = evothings.easyble;
 
+// Name of device to connect to
+var DeviceName = "ChangeMe!!"
+
 // Object that holds application data and functions.
 var app = {};
+
+// list of scanned devices
+deviceList = {}
 
 // Initialise the application.
 app.initialize = function()
@@ -15,52 +21,55 @@ app.initialize = function()
 		false);
 };
 
-// Initial callback from Evothings Library.
+// when low level initialization complete, 
+// this function is called
 app.onDeviceReady = function()
 {
+	// report status
 	app.showInfo('Device Ready!');
-		// only report devices once
-	easyble.reportDeviceOnce(true); // constant stream of data vs single report
+	
+	// call stop before you start, just in case something else is running
+	easyble.stopScan();
+	easyble.closeConnectedDevices();
+	
+	// only report devices once
+	easyble.reportDeviceOnce(true);
 	app.startScan();
 	app.showInfo('Status: Scanning...');
-
 };
 
-// print debug info to console and app screen
+// print debug info to console and application
 app.showInfo = function(info)
 {
 	document.getElementById('info').innerHTML = info;
 	console.log(info);
 };
 
-// Start scanning and handle devices
+// Scan all devices and report
 app.startScan = function()
 {
 	easyble.startScan(
 		function(device)
 		{
-			if(device.name){return;} // only process un-named devices, aka beacons 
-			for(key in device.advertisementData){
-				console.log("\t"+device.name+".advertisementData."+key+"="+device.advertisementData[key])}
+			// do not show un-named beacons
+			if(!device.name){return 0;}
+			console.log("\n\r\tDevice Found!")
+			console.log(device.name.toString() +" : "+device.address.toString().split(":").join(''))
 			
+
 			// add found device to device list
+			// see documentation here http://evothings.com/doc/raw/plugins/com.evothings.ble/com.evothings.module_ble.html
 			var element = $(
 			'<li style="font-size: 50%" onclick="app.connectToDevice()">'
 			+		'<strong>Address: '+device.address  +'</strong><br />'
 			+		'RSSI: '+device.rssi+"dB"	+'<br />'
-			+		'AdvertisementData: '+app.getHexData(device.advertisementData) +'<br />'
-			+		'ManufacturerData: '+app.getHexData(device.advertisementDatakCBAdvDataManufacturerData) +'<br />'
-			+'	<li>'
+			+		'Name: '+device.name 		+'<br />'
+			+		'ServiceUUID: '+device.advertisementData.kCBAdvDataServiceUUIDs +'<br />'
+			+		'Manufacturer Data Hex  : '+app.getHexData(device.advertisementData.kCBAdvDataManufacturerData)+'<br />'
+			+		'Manufacturer Data ASCII: '+app.hextostring(app.getHexData(device.advertisementData.kCBAdvDataManufacturerData))+'<br />'
+			+'	</li>'
 			);
 			$('#found-devices').append(element);
-
-			// DOTHIS: Change this to match the name of your device
-			if (device.address == "ChangeMeToYourDevicesAddress")
-			{
-				app.showInfo('Found your device!');
-				easyble.stopScan();
-				app.doSomething(device);
-			}
 		},
 		function(errorCode)
 		{
@@ -69,15 +78,18 @@ app.startScan = function()
 		});
 };
 
-// Fill this out with a decoder for your code
-app.doSomething = function(device)
-{
-	// process the device here, break up its data into chunks and print it out.
-
-
+// convert hex to ASCII strings
+app.hextostring = function(d){
+    if(d){ // do not parse undefined data
+    	var r = '';
+    	$.each(('' + d).match(/../g), function(){
+    	    r += String.fromCharCode('0x' + this)
+    	});
+    	return r
+    }
 }
 
-// convert base64 to array to hex.Used to show Advertising Packet Data
+// convert base64 to array to hex.
 app.getHexData = function(data)
 {
 	if(data){ // sanity check
