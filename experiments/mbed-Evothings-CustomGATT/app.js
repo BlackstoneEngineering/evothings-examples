@@ -7,15 +7,17 @@ var easyble = evothings.easyble;
 var MyDeviceName = "ChangeMe!!"
 
 // LED defines (inverted)
-var ledOFF = 0x1;
-var ledON  = 0x0;
+var ledOFF = 1;
+var ledON  = 0;
 
 // Object that holds application data and functions.
 var app = {};
 
 var GDevice;
 
-// Initialise the application.
+/*
+ * Initialise the application.
+*/
 app.initialize = function()
 {
 	document.addEventListener(
@@ -24,8 +26,10 @@ app.initialize = function()
 		false);
 };
 
-// when low level initialization complete, 
-// this function is called
+/*
+ * when low level initialization complete, 
+ * this function is called
+*/
 app.onDeviceReady = function()
 {
 	// report status
@@ -41,14 +45,19 @@ app.onDeviceReady = function()
 	app.showInfo('Status: Scanning...');
 };
 
-// print debug info to console and application
+
+/*
+ * print debug info to console and application
+*/
 app.showInfo = function(info)
 {
 	document.getElementById('info').innerHTML = info;
 	console.log(info);
 };
 
-// Scan all devices and report
+/*
+ * Scan all devices and report
+*/
 app.startScan = function()
 {
 	easyble.startScan(
@@ -76,7 +85,9 @@ app.startScan = function()
 		});
 };
 
-// Read services for a device.
+/*
+ * Read services for a device.
+*/
 app.connectToDevice = function(device)
 {
 	console.log("Starting ConnectToDevice")
@@ -97,7 +108,9 @@ app.connectToDevice = function(device)
 		});
 };
 
-// Dump all information on named device to the console
+/*
+ * Dump all information on named device to the console
+*/ 
 app.readServices = function(device)
 {
 	//read all services
@@ -115,7 +128,9 @@ app.readServices = function(device)
 		});
 };
 
-// convert base64 to array to hex.
+/*
+ * convert base64 to array to hex.
+*/ 
 app.getHexData = function(data)
 {
 	if(data){ // sanity check
@@ -123,7 +138,9 @@ app.getHexData = function(data)
 	}
 }
 
-// Toggle the LED on / off
+/*
+ * Toggle the LED on / off
+*/
 app.toggle = function()
 {	
 	// console.log(GDevice.__services[2].__characteristics[0]['uuid'])
@@ -131,20 +148,21 @@ app.toggle = function()
 		"0000a001-0000-1000-8000-00805f9b34fb",
 		function(win){
 			var view = new Uint8Array(win)
-			console.log("view[0]="+view[0]+"  !view[0]="+!view[0])
+			var led = new Uint8Array(1)
 			if(view[0] == ledON){
-				$('#toggle').toggleClass('red')
-				view[0] = ledOFF;
+				$('#toggle').removeClass('green')
+				$('#toggle').addClass('red')
+				led[0] = ledOFF;
 			}
 			else if (view[0] == ledOFF){
-				$('#toggle').toggleClass('green')
-				view[0] = ledON;
+				$('#toggle').removeClass('red')
+				$('#toggle').addClass('green')
+				led[0] = ledON;
 			}
-			console.log("view[0]="+view[0]+"  !view[0]="+!view[0])
 			GDevice.writeCharacteristic(
 				'0000a002-0000-1000-8000-00805f9b34fb',
-				view,
-				function(win){console.log("WriteChar Win:"+win)},
+				led,
+				function(win){console.log("WriteChar success:"+win)},
 				function(fail){console.log("WriteChar fail:"+fail)})
 			
 		},
@@ -152,7 +170,6 @@ app.toggle = function()
 			console.log("read char fail: "+fail);
 			}
 		);
-	//$('#toggle').toggleClass('red');
 }
 
 // Initialize the app.
