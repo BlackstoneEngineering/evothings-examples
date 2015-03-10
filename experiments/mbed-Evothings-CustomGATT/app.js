@@ -7,8 +7,8 @@ var easyble = evothings.easyble;
 var MyDeviceName = "ChangeMe!!"
 
 // LED defines (inverted)
-var ledOFF = 1;
-var ledON  = 0;
+var ledOFF = 0x1;
+var ledON  = 0x0;
 
 // Object that holds application data and functions.
 var app = {};
@@ -143,7 +143,7 @@ app.toggle = function()
 			console.log("view[0]="+view[0]+"  !view[0]="+!view[0])
 			GDevice.writeCharacteristic(
 				'0000a002-0000-1000-8000-00805f9b34fb',
-				!view[0],
+				view,
 				function(win){console.log("WriteChar Win:"+win)},
 				function(fail){console.log("WriteChar fail:"+fail)})
 			
