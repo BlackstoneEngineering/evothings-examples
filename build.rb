@@ -71,6 +71,7 @@ def buildBLEScan
 	destPath = 'examples/ble-scan'
 	copyCommon(destPath)
 	copyJQuery(destPath)
+	copyFastClick(destPath)
 end
 
 def buildTISensorTagDemo
@@ -82,6 +83,13 @@ end
 
 def buildTISensorTagSensors
 	destPath = 'examples/ti-sensortag-sensors'
+	copyCommon(destPath)
+	copyUtil(destPath)
+	copyTISensorTag(destPath)
+end
+
+def buildTISensorTagAccelerometer
+	destPath = 'examples/ti-sensortag-accelerometer'
 	copyCommon(destPath)
 	copyUtil(destPath)
 	copyTISensorTag(destPath)
@@ -193,6 +201,10 @@ def copyJQuery(destPath)
 	copyDir('resources/libs/jquery', destPath + '/libs')
 end
 
+def copyFastClick(destPath)
+	copyDir('resources/libs/fastclick.js', destPath + '/libs')
+end
+
 def copyEvothings(destPath)
 	copyDir('resources/libs/evothings/evothings.js', destPath + '/libs/evothings')
 end
@@ -281,6 +293,7 @@ def build
 	buildRFduinoLEDOnOff
 	buildTISensorTagDemo
 	buildTISensorTagSensors
+	buildTISensorTagAccelerometer
 	buildMediaTekLinkIt
 end
 
